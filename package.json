@@ -1,0 +1,30 @@
+{
+  "name": "owspain",
+  "version": "0.0.1",
+  "description": "ow spain discord bot",
+  "main": "bot.js",
+  "scripts": {
+    "test": "nodemon bot.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EsteveSegura/OWSpain.git"
+  },
+  "keywords": [
+    "bot",
+    "dicosrd",
+    "overwatch",
+    "tools",
+    "admin"
+  ],
+  "author": "GiR",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/EsteveSegura/OWSpain/issues"
+  },
+  "homepage": "https://github.com/EsteveSegura/OWSpain#readme",
+  "dependencies": {
+    "discord.js": "^11.5.1",
+    "dotenv": "^8.2.0"
+  }
+}
