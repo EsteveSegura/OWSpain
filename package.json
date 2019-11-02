@@ -25,6 +25,7 @@
   "homepage": "https://github.com/EsteveSegura/OWSpain#readme",
   "dependencies": {
     "discord.js": "^11.5.1",
-    "dotenv": "^8.2.0"
+    "dotenv": "^8.2.0",
+    "mongoose": "^5.7.7"
   }
 }
