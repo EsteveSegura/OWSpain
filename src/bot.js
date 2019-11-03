@@ -127,7 +127,7 @@ client.on('message', async (msg) => {
                let getUserDb = await userActions.getUser(msg.author.id)
                let acutalRol = msg.content.substr(1)
                if(getUserDb){
-                    userActions.addRolInGame(msg.content)
+                    userActions.addRolInGame(msg.content,msg.author.id)
                     msg.reply(`Se ha añadido el rol ${acutalRol}`)
                }else{
                     msg.reply(`No se ha podido añadir el rol ${acutalRol}\n¿Estas registrado? usa **!registrarme**`)
