@@ -66,7 +66,7 @@ async function addBattleTag(idDiscord, battleTag) {
                await User.update({ 'idDiscord': idDiscord }, {
                     idDiscord: user.idDiscord,
                     nickName: user.nickName,
-                    isPug: user.isPug,
+                    isPug: user.isPug,       
                     rolInGame: user.rolInGame,
                     battleTag: battleTag
                })
@@ -77,4 +77,25 @@ async function addBattleTag(idDiscord, battleTag) {
 }
 
 
-module.exports = { registerUser, getUser, addBattleTag, havePermisionsPugMaster }
+async function addRolInGame(idDiscord, rolInGame) {
+     return new Promise((resolve, reject) => {
+          User.findOne({ 'idDiscord': idDiscord }, async (err, user) => {
+               if (err) {
+                    console.log("fail")
+                    reject("fail_on_adding_rol")
+               }
+
+               await User.update({ 'idDiscord': idDiscord }, {
+                    idDiscord: user.idDiscord,
+                    nickName: user.nickName,
+                    isPug: user.isPug,       
+                    rolInGame: rolInGame.substr(1),
+                    battleTag: user.battleTag
+               })
+               
+               resolve("rol_added")
+          });
+     })
+}
+
+module.exports = { registerUser, getUser, addBattleTag, addRolInGame, havePermisionsPugMaster }

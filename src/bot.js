@@ -5,6 +5,7 @@ const client = new Discord.Client();
 
 //Models 
 const User = require('./models/users');
+const Pug = require('./models/pug');
 
 //Imports
 const utils = require('./utils');
@@ -53,17 +54,6 @@ client.on('message', async (msg) => {
                }
           }
      }
-
-     /*
-     if(msg.content.startsWith('!a')){
-          let data = await utils.getMemberFromId(msg.guild, msg.author.id)
-          console.log(data)
-     }
-
-     if(msg.content.startsWith('!qq')){
-          let data = await utils.getMemberFromId(msg.guild, msg.mentions.users.first().id)
-          console.log(data)
-     }*/
 
      //OUT OF TEST ZONE
      //ROL ZONE
@@ -131,6 +121,37 @@ client.on('message', async (msg) => {
                     msg.reply(`No puedes realizar esa acción.`)
                }
           }
+
+          //Por hacer
+          if(msg.content == "!dps"){
+               let getUserDb = await userActions.getUser(msg.author.id)
+               if(getUserDb){
+                    //si esta registrado
+               }else{
+                    
+               }
+
+          }
+
+          if(msg.content == "!tank"){
+               let getUserDb = await userActions.getUser(msg.author.id)
+               if(getUserDb){
+                    //si esta registrado
+               }else{
+                    
+               }
+               
+          }
+
+          if(msg.content == "!heal"){
+               let getUserDb = await userActions.getUser(msg.author.id)
+               if(getUserDb){
+                    //si esta registrado
+               }else{
+                    
+               }
+               
+          }
      }
      
 });
@@ -139,7 +160,8 @@ client.on('guildMemberAdd', async (guildMember) => {
      //Add rol
      //let rolToAdd = collections.getRolByName("Usuario")
      //guildMember.addRole(guildMember.guild.roles.find(role => role.name === rolToAdd.rolName));
-     //User
+     
+     //Registrar usuario
      let registerUser = await userActions.registerUser(guildMember)
      console.log(registerUser)
 })
