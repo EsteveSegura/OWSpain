@@ -93,7 +93,7 @@ client.on('message', async (msg) => {
 
                if(pugStatus.participants.length <= 12 && !isInPug && getUserDb){
                     await pugActions.addUserToPug(msg.author.id)
-                    msg.reply('puedes ' + pugStatus.participants.length)
+                    msg.reply(`Has entrado en el pug con éxito`)
                }else{
                     msg.reply('No has podido entrar por alguno de estos motivos\n1- El pug esta lleno, usa <**!lista**>\n2- Ya estas en el pug, usa <**!listaCompleta**>\n3- No estas registrado, usa <**!registrarme**>')
                }
@@ -103,7 +103,7 @@ client.on('message', async (msg) => {
                let isInPug = await pugActions.userIsInPug(msg.author.id)
                if(isInPug){
                     await pugActions.removeUserInPug(msg.author.id)
-                    msg.reply('Has salido del pug')
+                    msg.reply('Has salido del pug con éxito')
                }else{
                     msg.reply('No puedes salir del pug, no estas dentro')
                }
