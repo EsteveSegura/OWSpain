@@ -35,8 +35,8 @@ async function getPug(){
                     reject('cant_get_put');
                }
                resolve(pug[0])
-          })
-     })
+          });
+     });
 }
 
 async function userIsInPug(idDiscord){
