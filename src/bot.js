@@ -26,6 +26,11 @@ client.on('message', async (msg) => {
      let msgParam = msg.content.split(' ')[1]
      //console.log(msgParam)
 
+     if(msg.content === '!Y3JlYXJQdWdQYXJhRXZpdGFyQ3Jhc2g='){
+          await pugActions.createPug()
+          msg.channel.send("data OK")
+     }
+
      if(msg.content === '!registrarme'){
           let getUserDb = await userActions.getUser(msg.author.id)
           if(!getUserDb){
