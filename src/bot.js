@@ -7,11 +7,10 @@ const client = new Discord.Client();
 const User = require('./models/users');
 
 //Imports
-const collections = require('./collections');
 const utils = require('./utils');
+const collections = require('./collections');
 const userActions = require('./userActions');
-
-
+const pugActions = require('./pugActions');
 
 //DataBase
 mongoose.connect('mongodb://localhost/owspain', { useNewUrlParser: true, useUnifiedTopology: true  })
@@ -42,7 +41,6 @@ client.on('message', async (msg) => {
           
           if(canAddBattleTag){
                let battletagToAdd = await userActions.addBattleTag(msg.author.id, msgParam)
-               console.log(battletagToAdd)
                if(battletagToAdd == 'batttletag_added'){
                     msg.reply('El battletag se ha actualizado de forma correcta!')
                }else{
@@ -76,11 +74,53 @@ client.on('message', async (msg) => {
                     })
                }
           });
+          setTimeout(() => {
+               msg.delete()
+          }, 30000);
+     }
+
+     if(msg.channel.id == collections.channelIdPugs){
+          let pugStatus = await pugActions.getPug()
+          /*
+               !entrar
+               !salir
+               !limpiarlista
+               !lista
+          */
+          if(msg.content == "!entrar"){
+               let isInPug = await pugActions.userIsInPug(msg.author.id)
+               let getUserDb = await userActions.getUser(msg.author.id)
+
+               if(pugStatus.participants.length <= 12 && !isInPug && getUserDb){
+                    await pugActions.addUserToPug(msg.author.id)
+                    msg.reply('puedes ' + pugStatus.participants.length)
+               }else{
+                    msg.reply('no puedes')
+               }
+          }
+
+          if(msg.content == "!salir"){
+               let isInPug = await pugActions.userIsInPug(msg.author.id)
+
+               if(isInPug){
+                    await pugActions.removeUserInPug(msg.author.id)
+               }
+          }
+
+          if(msg.content == "!lista"){
+               let listString = await Promise.all(pugStatus.participants.map(async (participantPug) => {
+                    let userObject = await userActions.getUser(participantPug)
+                    return userObject.nickName;
+                    
+               }));
+               msg.channel.send(listString.join("\n"))
+          }
+
+          if(msg.content == "!a"){
+               msg.channel.send('!salir')
+          }
      }
      
-     setTimeout(() => {
-          msg.delete()
-     }, 30000);
 });
 
 client.on('guildMemberAdd', async (guildMember) => {

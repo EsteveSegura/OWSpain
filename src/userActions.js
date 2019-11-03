@@ -7,7 +7,11 @@ async function getUser(idDiscord) {
                if (err) {
                     reject(false);
                }
-               resolve(userDiscord);
+               if(userDiscord){
+                    resolve(userDiscord);
+               }else{
+                    resolve(false)
+               }
           });
      })
 }

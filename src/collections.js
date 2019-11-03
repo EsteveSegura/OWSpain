@@ -1,4 +1,5 @@
 const channelIdRequest = "639991724705316875";
+const channelIdPugs = "640303512097521697";
 const roles = [
      {
           "name":"usuario",
@@ -90,7 +91,4 @@ function getRolByName(name){
      })[0];
 }
 
-
-
-
-module.exports = { roles, getRolByName, channelIdRequest }
+module.exports = { roles, getRolByName, channelIdRequest, channelIdPugs }
