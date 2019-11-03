@@ -84,22 +84,4 @@ async function cleanPug(){
 }
 
 
-(async () => {
-     //await createPug()
-
-     //await getPug()
-     
-     //let newB = await userIsInPug('sdsdsd');
-     //console.log(newB)
-
-     //let newA = await addUserToPug('sdsdsd')
-     //console.log(newA)
-     
-     //await cleanPug()
-
-     //let newC = await removeUserInPug('sdsdsd')
-     //console.log(newC)
-})();
-
-
 module.exports = { createPug, getPug, userIsInPug, addUserToPug, removeUserInPug, cleanPug }

@@ -27,8 +27,13 @@ client.on('message', async (msg) => {
      //console.log(msgParam)
 
      if(msg.content === '!registrarme'){
-          let registerUser = await userActions.registerUser(msg.member)
-          msg.channel.send(registerUser)
+          let getUserDb = await userActions.getUser(msg.author.id)
+          if(!getUserDb){
+               let registerUser = await userActions.registerUser(msg.member)
+               msg.reply(`Bienvenido! se ha registrado tu usuario.\nTienes un mensaje privado.`)
+          }else{
+               msg.reply('Ya estabas registrado con anterioridad.')
+          }
      }
 
      if(msg.content.startsWith('!battletag')){
@@ -53,12 +58,12 @@ client.on('message', async (msg) => {
      if(msg.content.startsWith('!a')){
           let data = await utils.getMemberFromId(msg.guild, msg.author.id)
           console.log(data)
-     }*/
+     }
 
      if(msg.content.startsWith('!qq')){
           let data = await utils.getMemberFromId(msg.guild, msg.mentions.users.first().id)
           console.log(data)
-     }
+     }*/
 
      //OUT OF TEST ZONE
      //ROL ZONE
@@ -81,12 +86,7 @@ client.on('message', async (msg) => {
 
      if(msg.channel.id == collections.channelIdPugs){
           let pugStatus = await pugActions.getPug()
-          /*
-               !entrar
-               !salir
-               !limpiarlista
-               !lista
-          */
+
           if(msg.content == "!entrar"){
                let isInPug = await pugActions.userIsInPug(msg.author.id)
                let getUserDb = await userActions.getUser(msg.author.id)
@@ -95,29 +95,41 @@ client.on('message', async (msg) => {
                     await pugActions.addUserToPug(msg.author.id)
                     msg.reply('puedes ' + pugStatus.participants.length)
                }else{
-                    msg.reply('no puedes')
+                    msg.reply('No has podido entrar por alguno de estos motivos\n1- El pug esta lleno, usa <**!lista**>\n2- Ya estas en el pug, usa <**!listaCompleta**>\n3- No estas registrado, usa <**!registrarme**>')
                }
           }
 
           if(msg.content == "!salir"){
                let isInPug = await pugActions.userIsInPug(msg.author.id)
-
                if(isInPug){
                     await pugActions.removeUserInPug(msg.author.id)
+                    msg.reply('Has salido del pug')
+               }else{
+                    msg.reply('No puedes salir del pug, no estas dentro')
                }
           }
 
-          if(msg.content == "!lista"){
+          if(msg.content == "!listaCompleta"){
                let listString = await Promise.all(pugStatus.participants.map(async (participantPug) => {
                     let userObject = await userActions.getUser(participantPug)
-                    return userObject.nickName;
+                    return `**Discord**: ${userObject.nickName} **BattleTag**: ${userObject.battleTag}`;
                     
                }));
                msg.channel.send(listString.join("\n"))
           }
 
-          if(msg.content == "!a"){
-               msg.channel.send('!salir')
+          if(msg.content == "!lista"){
+               msg.reply(`hay ${pugStatus.participants.length}/12 jugadores apuntados\nPara ver la lista completa: <**!listaCompleta**>`)
+          }
+
+          if(msg.content == "!limpiar"){
+               let a = await userActions.havePermisionsPugMaster(msg.member)
+               if(a){
+                    pugActions.cleanPug()
+                    msg.reply(`El pug se ha limpiado de forma correcta.`)
+               }else{
+                    msg.reply(`No puedes realizar esa acción.`)
+               }
           }
      }
      
@@ -125,8 +137,8 @@ client.on('message', async (msg) => {
 
 client.on('guildMemberAdd', async (guildMember) => {
      //Add rol
-     let rolToAdd = collections.getRolByName("Usuario")
-     guildMember.addRole(guildMember.guild.roles.find(role => role.name === rolToAdd.rolName));
+     //let rolToAdd = collections.getRolByName("Usuario")
+     //guildMember.addRole(guildMember.guild.roles.find(role => role.name === rolToAdd.rolName));
      //User
      let registerUser = await userActions.registerUser(guildMember)
      console.log(registerUser)

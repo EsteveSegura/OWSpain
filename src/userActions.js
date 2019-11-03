@@ -1,6 +1,9 @@
 //Models 
 const User = require('./models/users');
 
+//collections
+const collections = require('./collections');
+
 async function getUser(idDiscord) {
      return new Promise((resolve, reject) => {
           User.findOne({ 'idDiscord': idDiscord }, (err, userDiscord) => {
@@ -37,7 +40,18 @@ async function registerUser(userObject) {
                     resolve("user_registered");
                });
           }
+     });
+}
 
+async function havePermisionsPugMaster(member){
+     return new Promise(async (resolve,reject) => {
+          console.log(collections.pugMasterRol)
+          member._roles.forEach((roles) => {
+               if(roles == collections.pugMasterRol){
+                    resolve(true)
+               }  
+          });
+          resolve(false)
      });
 }
 
@@ -63,4 +77,4 @@ async function addBattleTag(idDiscord, battleTag) {
 }
 
 
-module.exports = { registerUser, getUser, addBattleTag }
+module.exports = { registerUser, getUser, addBattleTag, havePermisionsPugMaster }

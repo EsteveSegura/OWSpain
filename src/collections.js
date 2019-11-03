@@ -1,5 +1,8 @@
-const channelIdRequest = "639991724705316875";
-const channelIdPugs = "640303512097521697";
+//const channelIdRequest = "639991724705316875";
+//const channelIdPugs = "640303512097521697";
+const channelIdRequest = "640563715422420997";
+const channelIdPugs = "640558248956657684";
+const pugMasterRol = "640548265988980779";
 const roles = [
      {
           "name":"usuario",
@@ -28,7 +31,7 @@ const roles = [
      {
           "name":"streamer",
           "rolName":"Streamer",
-          "canSelfAdd":true,
+          "canSelfAdd":false,
           "command": "!streamer",
           "description":"Cualquier streamer de overwatch"
      },
@@ -91,4 +94,5 @@ function getRolByName(name){
      })[0];
 }
 
-module.exports = { roles, getRolByName, channelIdRequest, channelIdPugs }
+module.exports = { roles, getRolByName, channelIdRequest, channelIdPugs, pugMasterRol }
+
