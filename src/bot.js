@@ -30,7 +30,7 @@ client.on('message', async (msg) => {
           let getUserDb = await userActions.getUser(msg.author.id)
           if(!getUserDb){
                let registerUser = await userActions.registerUser(msg.member)
-               msg.reply(`Bienvenido! se ha registrado tu usuario.\nTienes un mensaje privado.`)
+               msg.reply(`Bienvenido! se ha registrado tu usuario.`)
           }else{
                msg.reply('Ya estabas registrado con anterioridad.')
           }
