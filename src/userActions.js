@@ -77,13 +77,14 @@ async function addBattleTag(idDiscord, battleTag) {
 }
 
 
-async function addRolInGame(idDiscord, rolInGame) {
+async function addRolInGame(idDiscord,rolInGame) {
      return new Promise((resolve, reject) => {
           User.findOne({ 'idDiscord': idDiscord }, async (err, user) => {
                if (err) {
                     console.log("fail")
                     reject("fail_on_adding_rol")
                }
+               console.log(user)
 
                await User.update({ 'idDiscord': idDiscord }, {
                     idDiscord: user.idDiscord,
