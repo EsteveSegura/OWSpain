@@ -123,35 +123,18 @@ client.on('message', async (msg) => {
           }
 
           //Por hacer
-          if(msg.content == "!dps"){
+          if(msg.content == "!dps" || msg.content == "!tank" || msg.content == "!heal"){
                let getUserDb = await userActions.getUser(msg.author.id)
+               let acutalRol = msg.content.substr(1)
                if(getUserDb){
-                    //si esta registrado
+                    userActions.addRolInGame(msg.content)
+                    msg.reply(`Se ha añadido el rol ${acutalRol}`)
                }else{
-                    
+                    msg.reply(`No se ha podido añadir el rol ${acutalRol}\n¿Estas registrado? usa **!registrarme**`)
                }
 
           }
 
-          if(msg.content == "!tank"){
-               let getUserDb = await userActions.getUser(msg.author.id)
-               if(getUserDb){
-                    //si esta registrado
-               }else{
-                    
-               }
-               
-          }
-
-          if(msg.content == "!heal"){
-               let getUserDb = await userActions.getUser(msg.author.id)
-               if(getUserDb){
-                    //si esta registrado
-               }else{
-                    
-               }
-               
-          }
      }
      
 });
