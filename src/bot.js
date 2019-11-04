@@ -149,9 +149,9 @@ client.on('message', async (msg) => {
                .setColor('#272c32')
                .setTitle(`Información sobre usuario ${msg.author.username}`)
                .setThumbnail(msg.author.avatarURL)
-               .addField('Nick', selfUerData.nickName, true)
-               .addField('Rol', selfUerData.rolInGame, true)
-               .addField('BattleTag', selfUerData.battleTag, true)
+               .addField('Nick', selfUerData.nickName + " ", true)
+               .addField('Rol', selfUerData.rolInGame + " ", true)
+               .addField('BattleTag', selfUerData.battleTag + " ", true)
                .setTimestamp()
                .setFooter('Información obtenida', 'https://i.imgur.com/wUaAvkK.png');
 
