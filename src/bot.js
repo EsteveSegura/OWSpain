@@ -149,9 +149,9 @@ client.on('message', async (msg) => {
                .setColor('#272c32')
                .setTitle(`Información sobre usuario ${msg.author.username}`)
                .setThumbnail(msg.author.avatarURL)
-               .addField('Nick', selfUerData.nickName + " ", true)
-               .addField('Rol', selfUerData.rolInGame + " ", true)
-               .addField('BattleTag', selfUerData.battleTag + " ", true)
+               .addField('Nick', `${selfUerData.nickName}` || "__No hay datos__", true)
+               .addField('Rol', `${selfUerData.rolInGame}` || "__No hay datos__", true)
+               .addField('BattleTag', `${selfUerData.battleTag}` || "__No hay datos__", true)
                .setTimestamp()
                .setFooter('Información obtenida', 'https://i.imgur.com/wUaAvkK.png');
 
@@ -167,9 +167,9 @@ client.on('message', async (msg) => {
                          .setColor('#272c32')
                          .setTitle(`Información sobre usuario ${msg.author.username}`)
                          .setThumbnail(msg.mentions.users.first().avatarURL)
-                         .addField('Nick', userData.nickName, true)
-                         .addField('Rol', userData.rolInGame, true)
-                         .addField('BattleTag', userData.battleTag, true)
+                         .addField('Nick', `${userData.nickName}` || "__No hay datos__", true)
+                         .addField('Rol', `${userData.rolInGame}` || "__No hay datos__", true)
+                         .addField('BattleTag', `${userData.battleTag}` || "__No hay datos__", true)
                          .setTimestamp()
                          .setFooter('Información obtenida', 'https://i.imgur.com/wUaAvkK.png');
           
