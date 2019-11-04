@@ -14,7 +14,7 @@ const userActions = require('./userActions');
 const pugActions = require('./pugActions');
 
 //DataBase
-mongoose.connect('mongodb://localhost/owspain', { useNewUrlParser: true, useUnifiedTopology: true  })
+mongoose.connect('mongodb://localhost/owspain', { useNewUrlParser: true, useUnifiedTopology: true })
      .then((db) => console.log('Conectado con exito a la base de datos'))
      .catch((err) => console.log('Fallo al conectar la base de datos'))
 
@@ -24,49 +24,49 @@ client.on('ready', () => {
 });
 
 client.on('message', async (msg) => {
+     let msgContent = msg.content.toLocaleLowerCase()
      let msgParam = msg.content.split(' ')[1]
      //console.log(msgParam)
 
-     if(msg.content === '!registrarme'){
+     if (msgContent === '!registrarme') {
           let getUserDb = await userActions.getUser(msg.author.id)
-          if(!getUserDb){
+          if (!getUserDb) {
                let registerUser = await userActions.registerUser(msg.member)
                msg.reply(`Bienvenido! se ha registrado tu usuario.`)
-          }else{
+          } else {
                msg.reply('Ya estabas registrado con anterioridad.')
           }
      }
 
-     if(msg.content.startsWith('!battletag')){
+     if (msgContent.startsWith('!battletag')) {
           let canAddBattleTag = true
-          
-          if(typeof msgParam == 'undefined'){
+
+          if (typeof msgParam == 'undefined') {
                canAddBattleTag = false;
                msg.reply('El comando no es correcto. __!battletag **GiR#9923**__')
           }
-          
-          if(canAddBattleTag){
+
+          if (canAddBattleTag) {
                let battletagToAdd = await userActions.addBattleTag(msg.author.id, msgParam)
-               if(battletagToAdd == 'batttletag_added'){
+               if (battletagToAdd == 'batttletag_added') {
                     msg.reply('El battletag se ha actualizado de forma correcta!')
-               }else{
+               } else {
                     msg.reply('Algo ha ido mal, habla con un administrador')
                }
           }
      }
 
-     //OUT OF TEST ZONE
      //ROL ZONE
-     if(msg.channel.id == collections.channelIdRequest){
+     if (msg.channel.id == collections.channelIdRequest) {
           collections.roles.forEach(async (roles) => {
-               if(roles.canSelfAdd && msg.content === roles.command){
+               if (roles.canSelfAdd && msgContent === roles.command) {
                     msg.member.addRole(msg.member.guild.roles.find(role => role.name === roles.rolName))
-                    .then(() => {
-                         msg.reply(`Se te ha añadido el rol **${roles.rolName}**`)
-                    })
-                    .catch(() => {
-                         msg.reply(`Parece que hay un problema al añadir el rol **${roles.rolName}** habla con un administrador para solucionar el problema.`)
-                    })
+                         .then(() => {
+                              msg.reply(`Se te ha añadido el rol **${roles.rolName}**`)
+                         })
+                         .catch(() => {
+                              msg.reply(`Parece que hay un problema al añadir el rol **${roles.rolName}** habla con un administrador para solucionar el problema.`)
+                         })
                }
           });
           setTimeout(() => {
@@ -74,80 +74,121 @@ client.on('message', async (msg) => {
           }, 30000);
      }
 
-     if(msg.channel.id == collections.channelIdPugs){
+     //PUG ZONE
+     if (msg.channel.id == collections.channelIdPugs) {
           let pugStatus = await pugActions.getPug()
 
-          if(msg.content == "!entrar"){
+          if (msgContent == "!entrar") {
                let isInPug = await pugActions.userIsInPug(msg.author.id)
                let getUserDb = await userActions.getUser(msg.author.id)
 
-               if(pugStatus.participants.length <= 12 && !isInPug && getUserDb){
+               if (pugStatus.participants.length <= 12 && !isInPug && getUserDb) {
                     await pugActions.addUserToPug(msg.author.id)
                     msg.reply(`Has entrado en el pug con éxito`)
-               }else{
+               } else {
                     msg.reply('No has podido entrar por alguno de estos motivos\n1- El pug esta lleno, usa <**!lista**>\n2- Ya estas en el pug, usa <**!listaCompleta**>\n3- No estas registrado, usa <**!registrarme**>')
                }
           }
 
-          if(msg.content == "!salir"){
+          if (msgContent == "!salir") {
                let isInPug = await pugActions.userIsInPug(msg.author.id)
-               if(isInPug){
+               if (isInPug) {
                     await pugActions.removeUserInPug(msg.author.id)
                     msg.reply('Has salido del pug con éxito')
-               }else{
+               } else {
                     msg.reply('No puedes salir del pug, no estas dentro')
                }
           }
 
-          if(msg.content == "!listaCompleta"){
-               if(pugStatus.participants.length != 0){
+          if (msgContent == "!listacompleta") {
+               if (pugStatus.participants.length != 0) {
                     let listString = await Promise.all(pugStatus.participants.map(async (participantPug) => {
                          let userObject = await userActions.getUser(participantPug)
-                         return `**Discord**: ${userObject.nickName} **BattleTag**: ${userObject.battleTag}`;
-                         
+                         return `**Discord**: ${userObject.nickName} - **BattleTag**: ${userObject.battleTag} - **Rol**: ${userObject.rolInGame}`;
+
                     }));
                     msg.channel.send(listString.join("\n"))
-               }else{
+               } else {
                     msg.reply('El pug esta vacio')
                }
           }
 
-          if(msg.content == "!lista"){
+          if (msgContent == "!lista") {
                msg.reply(`hay ${pugStatus.participants.length}/12 jugadores apuntados\nPara ver la lista completa: <**!listaCompleta**>`)
           }
 
-          if(msg.content == "!limpiar"){
+          if (msgContent == "!limpiar") {
                let a = await userActions.havePermisionsPugMaster(msg.member)
-               if(a){
+               if (a) {
                     pugActions.cleanPug()
                     msg.reply(`El pug se ha limpiado de forma correcta.`)
-               }else{
+               } else {
                     msg.reply(`No puedes realizar esa acción.`)
                }
           }
 
           //Por hacer
-          if(msg.content == "!dps" || msg.content == "!tank" || msg.content == "!heal"){
+          if (msgContent == "!dps" || msgContent == "!tank" || msgContent == "!heal") {
                let getUserDb = await userActions.getUser(msg.author.id)
-               let acutalRol = msg.content.substr(1)
-               if(getUserDb){
-                    userActions.addRolInGame(msg.author.id, msg.content)
+               let acutalRol = msgContent.substr(1)
+               if (getUserDb) {
+                    userActions.addRolInGame(msg.author.id, msgContent)
                     msg.reply(`Se ha añadido el rol ${acutalRol}`)
-               }else{
+               } else {
                     msg.reply(`No se ha podido añadir el rol ${acutalRol}\n¿Estas registrado? usa **!registrarme**`)
                }
 
           }
 
      }
-     
+
+     //USER
+     if (msgContent == "!yo") {
+          let selfUerData = await userActions.getUser(msg.author.id)
+          const dataCard = new Discord.RichEmbed()
+               .setColor('#272c32')
+               .setTitle(`Información sobre usuario ${msg.author.username}`)
+               .setThumbnail(msg.author.avatarURL)
+               .addField('Nick', selfUerData.nickName, true)
+               .addField('Rol', selfUerData.rolInGame, true)
+               .addField('BattleTag', selfUerData.battleTag, true)
+               .setTimestamp()
+               .setFooter('Información obtenida', 'https://i.imgur.com/wUaAvkK.png');
+
+          msg.channel.send(dataCard);
+     }
+
+     if(msgContent.startsWith("!info")){
+          let userData = await userActions.getUser(msg.mentions.users.first().id)
+          console.log(userData)
+          if(typeof msgParam != "undefined" ){
+               if(userData){
+                    const dataCard = new Discord.RichEmbed()
+                         .setColor('#272c32')
+                         .setTitle(`Información sobre usuario ${msg.author.username}`)
+                         .setThumbnail(msg.mentions.users.first().avatarURL)
+                         .addField('Nick', userData.nickName, true)
+                         .addField('Rol', userData.rolInGame, true)
+                         .addField('BattleTag', userData.battleTag, true)
+                         .setTimestamp()
+                         .setFooter('Información obtenida', 'https://i.imgur.com/wUaAvkK.png');
+          
+                    msg.channel.send(dataCard);
+               }else{
+                    msg.reply(`Parece que no se ha encontrado info de **${msg.mentions.users.first().username}**`)
+               }
+          }else{
+               msg.reply(`Tienes que etiquetar a alguien`)
+          }
+     }
+
 });
 
 client.on('guildMemberAdd', async (guildMember) => {
      //Add rol
      //let rolToAdd = collections.getRolByName("Usuario")
      //guildMember.addRole(guildMember.guild.roles.find(role => role.name === rolToAdd.rolName));
-     
+
      //Registrar usuario
      let registerUser = await userActions.registerUser(guildMember)
      console.log(registerUser)
