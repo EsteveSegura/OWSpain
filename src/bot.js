@@ -100,12 +100,16 @@ client.on('message', async (msg) => {
           }
 
           if(msg.content == "!listaCompleta"){
-               let listString = await Promise.all(pugStatus.participants.map(async (participantPug) => {
-                    let userObject = await userActions.getUser(participantPug)
-                    return `**Discord**: ${userObject.nickName} **BattleTag**: ${userObject.battleTag}`;
-                    
-               }));
-               msg.channel.send(listString.join("\n"))
+               if(pugStatus.participants.length != 0){
+                    let listString = await Promise.all(pugStatus.participants.map(async (participantPug) => {
+                         let userObject = await userActions.getUser(participantPug)
+                         return `**Discord**: ${userObject.nickName} **BattleTag**: ${userObject.battleTag}`;
+                         
+                    }));
+                    msg.channel.send(listString.join("\n"))
+               }else{
+                    msg.reply('El pug esta vacio')
+               }
           }
 
           if(msg.content == "!lista"){
