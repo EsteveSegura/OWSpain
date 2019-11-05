@@ -21,6 +21,7 @@ mongoose.connect('mongodb://localhost/owspain', { useNewUrlParser: true, useUnif
 
 client.on('ready', () => {
      console.log(`Logged in as ${client.user.tag}!`);
+     client.user.setGame('!ayuda')
 });
 
 client.on('message', async (msg) => {
@@ -128,7 +129,7 @@ client.on('message', async (msg) => {
           }
 
           //Por hacer
-          if (msgContent == "!dps" || msgContent == "!tank" || msgContent == "!heal") {
+          if (msgContent == "!dps" || msgContent == "!tank" || msgContent == "!heal" || msgContent == "!flex") {
                let getUserDb = await userActions.getUser(msg.author.id)
                let acutalRol = msgContent.substr(1)
                if (getUserDb) {
@@ -165,7 +166,7 @@ client.on('message', async (msg) => {
                if(userData){
                     const dataCard = new Discord.RichEmbed()
                          .setColor('#272c32')
-                         .setTitle(`Información sobre usuario ${msg.author.username}`)
+                         .setTitle(`Información sobre usuario ${userData.nickName}`)
                          .setThumbnail(msg.mentions.users.first().avatarURL)
                          .addField('Nick', `${userData.nickName}` || "__No hay datos__", true)
                          .addField('Rol', `${userData.rolInGame}` || "__No hay datos__", true)
@@ -180,6 +181,10 @@ client.on('message', async (msg) => {
           }else{
                msg.reply(`Tienes que etiquetar a alguien`)
           }
+     }
+
+     if(msgContent == "!help"){
+          msg.channel.send("**Lista de comandos: Usuario **\n```!registrarme: Guarda tu cuenta en el sistema. Necesario para jugar pugs\n!battletag <tag>: Guarda o actualiza tu battletag. Necesario para jugar pugs. Ej: !battletag GiR#2323\n!tank !dps !heal !flex: Asignate tu rol favorito. Ej: !tank\n!yo: Muestra tu información\n!info <usuario>: Muestra la información de un usuario. Ej: !info @GiR\n``` **Lista de comandos: Pugs** ```!entrar: Te unes al pug en curso\n!salir: Sales del pug, solo si estas dentro\n!lista: Muestra el numero de participantes\n!listaCompleta: Muestra la información de los participantes\n!limpiar: Elimina todos los participantes del pug```")
      }
 
 });
@@ -197,4 +202,4 @@ client.on('guildMemberAdd', async (guildMember) => {
 
 
 
-client.login(process.env.TOKEN);
+client.login(process.env.DEBUGTOKEN);
