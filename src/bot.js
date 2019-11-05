@@ -205,7 +205,7 @@ client.on('message', async (msg) => {
      }
 
      if(msgContent == "!help" || msgContent == "!ayuda"){
-          msg.channel.send("**Lista de comandos: Usuario **\n```!registrarme: Guarda tu cuenta en el sistema. Necesario para jugar pugs\n!battletag <tag>: Guarda o actualiza tu battletag. Necesario para jugar pugs. Ej: !battletag GiR#2323\n!tank !dps !heal !flex: Asignate tu rol favorito. Ej: !tank\n!yo: Muestra tu información\n!info <usuario>: Muestra la información de un usuario. Ej: !info @GiR\n``` **Lista de comandos: Pugs** ```!entrar: Te unes al pug en curso\n!salir: Sales del pug, solo si estas dentro\n!lista: Muestra el numero de participantes\n!listaCompleta: Muestra la información de los participantes\n!limpiar: Elimina todos los participantes del pug```")
+          msg.channel.send("**Lista de comandos: Usuario **\n```!registrarme: Guarda tu cuenta en el sistema. Necesario para jugar pugs\n!battletag <tag>: Guarda o actualiza tu battletag. Necesario para jugar pugs. Ej: !battletag GiR#2323\n!tank !dps !heal !flex: Asignate tu rol favorito. Ej: !tank\n!yo: Muestra tu información\n!info <usuario>: Muestra la información de un usuario. Ej: !info @GiR\n``` **Lista de comandos: Pugs** ```!entrar: Te unes al pug en curso\n!salir: Sales del pug, solo si estas dentro\n!lista: Muestra el numero de participantes\n!listaCompleta: Muestra la información de los participantes\n!limpiar: Elimina todos los participantes del pug\n!sacar <usuario>: Eliminas a un usuario del pug. Ej: !sacar @GiR```")
      }
 
 });
