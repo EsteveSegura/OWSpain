@@ -21,7 +21,7 @@ mongoose.connect('mongodb://localhost/owspain', { useNewUrlParser: true, useUnif
 
 client.on('ready', () => {
      console.log(`Logged in as ${client.user.tag}!`);
-     client.user.setGame('!ayuda')
+     client.user.setActivity('!ayuda')
 });
 
 client.on('message', async (msg) => {
@@ -119,12 +119,33 @@ client.on('message', async (msg) => {
           }
 
           if (msgContent == "!limpiar") {
-               let a = await userActions.havePermisionsPugMaster(msg.member)
-               if (a) {
+               let isPugMaster = await userActions.havePermisionsPugMaster(msg.member)
+               if (isPugMaster) {
                     pugActions.cleanPug()
                     msg.reply(`El pug se ha limpiado de forma correcta.`)
                } else {
                     msg.reply(`No puedes realizar esa acción.`)
+               }
+          }
+
+          if (msgContent.startsWith("!sacar")) {
+               let userData = await userActions.getUser(msg.mentions.users.first().id)
+               let isPugMaster = await userActions.havePermisionsPugMaster(msg.member)
+               console.log(userData)
+               if(typeof msgParam != "undefined" ){
+                    if(userData && isPugMaster){
+                         let userIsInPug = pugActions.userIsInPug(userData.idDiscord)
+                         if(userIsInPug){
+                              pugActions.removeUserInPug(userData.idDiscord)
+                              msg.reply(`Se ha eliminado a <@${userData.idDiscord}>`) //Mejorar esto
+                         }else{
+                              msg.reply(`Ese usuario no esta en el pug`)
+                         }
+                    }else{
+                         msg.reply(`No se puede realizar esa acción`)
+                    }
+               }else{
+                    msg.reply(`Tienes que etiquetar a alguien`)
                }
           }
 
@@ -190,16 +211,9 @@ client.on('message', async (msg) => {
 });
 
 client.on('guildMemberAdd', async (guildMember) => {
-     //Add rol
-     //let rolToAdd = collections.getRolByName("Usuario")
-     //guildMember.addRole(guildMember.guild.roles.find(role => role.name === rolToAdd.rolName));
-
      //Registrar usuario
      let registerUser = await userActions.registerUser(guildMember)
      console.log(registerUser)
 })
 
-
-
-
-client.login(process.env.DEBUGTOKEN);
+client.login(process.env.TOKEN);

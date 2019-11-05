@@ -1,5 +1,3 @@
-//const channelIdRequest = "639991724705316875";
-//const channelIdPugs = "640303512097521697";
 const channelIdRequest = "640563715422420997";
 const channelIdPugs = "639930249311944735";
 const pugMasterRol = "640548265988980779";
