@@ -3,12 +3,9 @@ const Discord = require('discord.js');
 const mongoose = require('mongoose');
 const client = new Discord.Client();
 
-//Models 
-const User = require('./models/users');
-const Pug = require('./models/pug');
-
 //Imports
 const utils = require('./utils');
+const moderationActions = require('./moderationActions');
 const collections = require('./collections');
 const userActions = require('./userActions');
 const pugActions = require('./pugActions');
@@ -28,7 +25,7 @@ client.on('ready', () => {
 client.on('message', async (msg) => {
      let msgContent = msg.content.toLocaleLowerCase()
      let msgParam = msg.content.split(' ')[1]
-     //console.log(msgParam)
+     let msgParam2 = msg.content.split(' ')[2]
 
      if (msgContent === '!registrarme') {
           let getUserDb = await userActions.getUser(msg.author.id)
@@ -59,7 +56,8 @@ client.on('message', async (msg) => {
      }
 
      //ROL ZONE
-     if (msg.channel.id == collections.channelIdRequest) {
+     let requestChannel = await collections.getChannelByName(msg.guild,collections.channelIdRequest)
+     if (msg.channel.id == requestChannel.id) {
           collections.roles.forEach(async (roles) => {
                if (roles.canSelfAdd && msgContent === roles.command) {
                     msg.member.addRole(msg.member.guild.roles.find(role => role.name === roles.rolName))
@@ -77,7 +75,8 @@ client.on('message', async (msg) => {
      }
 
      //PUG ZONE
-     if (msg.channel.id == collections.channelIdPugs) {
+     let pugChannel = await collections.getChannelByName(msg.guild,collections.channelIdPugs)
+     if (msg.channel.id == pugChannel.id) {
           let pugStatus = await pugActions.getPug()
 
           if (msgContent == "!entrar") {
@@ -120,7 +119,7 @@ client.on('message', async (msg) => {
           }
 
           if (msgContent == "!limpiar") {
-               let isPugMaster = await userActions.havePermisionsPugMaster(msg.member)
+               let isPugMaster = await userActions.havePermisionsPugMaster(msg.guild,msg.member)
                if (isPugMaster) {
                     pugActions.cleanPug()
                     msg.reply(`El pug se ha limpiado de forma correcta.`)
@@ -131,7 +130,7 @@ client.on('message', async (msg) => {
 
           if (msgContent.startsWith("!sacar")) {
                let userData = await userActions.getUser(msg.mentions.users.first().id)
-               let isPugMaster = await userActions.havePermisionsPugMaster(msg.member)
+               let isPugMaster = await userActions.havePermisionsPugMaster(msg.guild,msg.member)
                console.log(userData)
                if(typeof msgParam != "undefined" ){
                     if(userData && isPugMaster){
@@ -160,9 +159,7 @@ client.on('message', async (msg) => {
                } else {
                     msg.reply(`No se ha podido añadir el rol ${acutalRol}\n¿Estas registrado? usa **!registrarme**`)
                }
-
           }
-
      }
 
      //USER
@@ -206,7 +203,8 @@ client.on('message', async (msg) => {
      }
 
      //TEMPORAL
-     if (msg.channel.id == collections.channelIdWar) {
+     let warChannel = await collections.getChannelByName(msg.guild,collections.channelIdWar)
+     if (msg.channel.id == warChannel.id) {
           if(msgContent == "!createwar"){
                let createWar = await warActions.createWar()
                console.log(createWar)
@@ -234,6 +232,50 @@ client.on('message', async (msg) => {
      }
      //TEMPORAL
 
+     //ADMIN
+     /*
+     if(msgContent.startsWith("!mute")){
+          if(msg.member.hasPermission('KICK_MEMBERS', false, false)){
+               if(typeof msgParam != "undefined" && typeof msgParam2 != "undefined" && /^([0-9])+(h|d|m)$/g.test(msgParam2)){
+                    let userToMute = await utils.getMemberFromId(msg.guild,msg.mentions.users.first().id)
+                    let modAction = await moderationActions.mute(userToMute.id,'Mute',utils.addTimeToDate(Date.now(),msgParam2),userToMute._roles)
+                    if(modAction == "muted"){
+                         mutedRolId = collections.getRolIdByName(msg.guild,collections.mutedRol).id
+                         userToMute.addRole(mutedRolId)
+                         msg.reply(`Has muteado a ${userToMute.user.username}`)
+                    }else{
+                         msg.reply(`¿El usuario ya tiene un muteo?`)
+                    }
+               }else{
+                    msg.reply(`revisa el comando, no esta bien`)
+               }
+          }else{
+               msg.reply('¿Eres administrador o moderador?')
+          }
+     }
+     //COMPROBAR CADA MIN! PARA SABER SI HAY QUE QUITAR O NO
+     if(msgContent.startsWith("!unmute")){
+          if(msg.member.hasPermission('KICK_MEMBERS', false, false)){
+               if(typeof msgParam != "undefined"){
+                    let userToUnMute = await utils.getMemberFromId(msg.guild,msg.mentions.users.first().id)
+                    let unMute = await moderationActions.removeMute(userToUnMute.id)
+                    if(unMute.message == "deleted"){
+                         mutedRolId = collections.getRolIdByName(msg.guild,collections.mutedRol).id
+                         await userToUnMute.removeRole(mutedRolId)                    
+                         msg.reply(`Se ha quitado el mute sobre ${userToUnMute.user.username}`)
+                    }else{
+                         msg.reply(`No se ha podido quitar el mute sobre ${userToUnMute.user.username}`)
+                    }
+               }else{
+                    msg.reply(`revisa el comando, no esta bien`)
+               }
+          }else{
+               msg.reply('¿Eres administrador o moderador?')
+          }
+     }
+     */
+     //ADMIN
+
      if(msgContent == "!help" || msgContent == "!ayuda"){
           msg.channel.send("**Lista de comandos: Usuario **\n```!registrarme: Guarda tu cuenta en el sistema. Necesario para jugar pugs\n!battletag <tag>: Guarda o actualiza tu battletag. Necesario para jugar pugs. Ej: !battletag GiR#2323\n!tank !dps !heal !flex: Asignate tu rol favorito. Ej: !tank\n!yo: Muestra tu información\n!info <usuario>: Muestra la información de un usuario. Ej: !info @GiR\n``` **Lista de comandos: Pugs** ```!entrar: Te unes al pug en curso\n!salir: Sales del pug, solo si estas dentro\n!lista: Muestra el numero de participantes\n!listaCompleta: Muestra la información de los participantes\n!limpiar: Elimina todos los participantes del pug\n!sacar <usuario>: Eliminas a un usuario del pug. Ej: !sacar @GiR```")
      }
@@ -246,4 +288,4 @@ client.on('guildMemberAdd', async (guildMember) => {
      console.log(registerUser)
 })
 
-client.login(process.env.TOKEN);
+client.login(process.env.DEBUGTOKEN);

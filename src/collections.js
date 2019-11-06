@@ -1,39 +1,10 @@
-const channelIdRequest = "640563715422420997";
-const channelIdPugs = "639930249311944735";
-const channelIdWar = "641603509434843137";
-const pugMasterRol = "640548265988980779";
+const channelIdRequest = "auto-rol";
+const channelIdPugs = "pugs";
+const channelIdWar = "ow-spain-war";
+
+const mutedRol = "muted";
+const pugMasterRol = "PugMaster";
 const roles = [
-     {
-          "name":"usuario",
-          "rolName":"Usuario",
-          "canSelfAdd" : false,
-          "description":"Usuario normal y corriente"
-     },
-     {
-          "name":"administrador",
-          "rolName":"Administrador",
-          "canSelfAdd" : false,
-          "description":"Administrador absoluto"
-     },
-     {
-          "name":"policía",
-          "rolName":"Policía",
-          "canSelfAdd" : false,
-          "description":"Mod con permisos limitados"
-     },
-     {
-          "name":"titanmedia",
-          "rolName":"TitanMedia",
-          "canSelfAdd" : false,
-          "description":"Integrantes de titan media"
-     },
-     {
-          "name":"streamer",
-          "rolName":"Streamer",
-          "canSelfAdd":false,
-          "command": "!streamer",
-          "description":"Cualquier streamer de overwatch"
-     },
      {
           "name":"pc",
           "rolName":"PC",
@@ -63,13 +34,6 @@ const roles = [
           "description":"Players en Switch"
      },
      {
-          "name":"pugs",
-          "rolName":"pugs",
-          "canSelfAdd":true,
-          "command": "!pugs",
-          "description":"los integrantes dispuestos a jugar pugs"
-     },
-     {
           "name":"es",
           "rolName":"ES",
           "canSelfAdd":true,
@@ -85,6 +49,16 @@ const roles = [
      },
 ]
 
+async function getChannelByName(guild,name){
+     let channel = await guild.channels.find('name',name)
+     return channel
+}
+
+async function getRolIdByName(guild,name){
+     let rol = await guild.roles.find('name',name)
+     return rol
+}
+
 function getRolByName(name){
      return roles.filter((allRoles) => {
           if(allRoles.name == name){
@@ -93,5 +67,5 @@ function getRolByName(name){
      })[0];
 }
 
-module.exports = { roles, getRolByName, channelIdRequest, channelIdPugs, channelIdWar, pugMasterRol }
+module.exports = { roles, getRolByName, getRolIdByName, getChannelByName, channelIdRequest, channelIdPugs, channelIdWar, pugMasterRol, mutedRol }
 

@@ -43,11 +43,11 @@ async function registerUser(userObject) {
      });
 }
 
-async function havePermisionsPugMaster(member){
+async function havePermisionsPugMaster(guild,member){
      return new Promise(async (resolve,reject) => {
-          console.log(collections.pugMasterRol)
+          pugMasterRol = collections.getRolIdByName(guild,collections.pugMasterRol).id
           member._roles.forEach((roles) => {
-               if(roles == collections.pugMasterRol){
+               if(roles == pugMasterRol){
                     resolve(true)
                }  
           });
