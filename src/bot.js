@@ -12,6 +12,7 @@ const utils = require('./utils');
 const collections = require('./collections');
 const userActions = require('./userActions');
 const pugActions = require('./pugActions');
+const warActions = require('./warActions');
 
 //DataBase
 mongoose.connect('mongodb://localhost/owspain', { useNewUrlParser: true, useUnifiedTopology: true })
@@ -203,6 +204,35 @@ client.on('message', async (msg) => {
                msg.reply(`Tienes que etiquetar a alguien`)
           }
      }
+
+     //TEMPORAL
+     if (msg.channel.id == collections.channelIdWar) {
+          if(msgContent == "!createwar"){
+               let createWar = await warActions.createWar()
+               console.log(createWar)
+               if(createWar == "war_created"){
+                    msg.reply("OK.")
+               }
+          }
+
+          if(msgContent.startsWith("!war")){
+               createWar = await warActions.addToList(msgParam)
+               if(typeof msgParam != "undefined"){
+                    if(createWar == "user_added"){
+                         msg.reply(`Se ha añadido ${msgParam} a la lista`)
+                    }else{
+                         msg.reply(`Ha ocurrido algo inesperado, habla con GiR`);
+                    }
+               }else{
+                    msg.reply(`El comando no se ha ejecutado de forma correcta.`)
+               }
+          }
+
+          setTimeout(() => {
+               msg.delete()
+          }, 30000);
+     }
+     //TEMPORAL
 
      if(msgContent == "!help" || msgContent == "!ayuda"){
           msg.channel.send("**Lista de comandos: Usuario **\n```!registrarme: Guarda tu cuenta en el sistema. Necesario para jugar pugs\n!battletag <tag>: Guarda o actualiza tu battletag. Necesario para jugar pugs. Ej: !battletag GiR#2323\n!tank !dps !heal !flex: Asignate tu rol favorito. Ej: !tank\n!yo: Muestra tu información\n!info <usuario>: Muestra la información de un usuario. Ej: !info @GiR\n``` **Lista de comandos: Pugs** ```!entrar: Te unes al pug en curso\n!salir: Sales del pug, solo si estas dentro\n!lista: Muestra el numero de participantes\n!listaCompleta: Muestra la información de los participantes\n!limpiar: Elimina todos los participantes del pug\n!sacar <usuario>: Eliminas a un usuario del pug. Ej: !sacar @GiR```")
