@@ -288,4 +288,4 @@ client.on('guildMemberAdd', async (guildMember) => {
      console.log(registerUser)
 })
 
-client.login(process.env.DEBUGTOKEN);
+client.login(process.env.TOKEN);
