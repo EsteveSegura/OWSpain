@@ -84,7 +84,7 @@ client.on('message', async (msg) => {
                let isInPug = await pugActions.userIsInPug(msg.author.id)
                let getUserDb = await userActions.getUser(msg.author.id)
 
-               if (pugStatus.participants.length <= 12 && !isInPug && getUserDb) {
+               if (pugStatus.participants.length <= 24 && !isInPug && getUserDb) {
                     await pugActions.addUserToPug(msg.author.id)
                     msg.reply(`Has entrado en el pug con éxito`)
                } else {
@@ -104,10 +104,9 @@ client.on('message', async (msg) => {
 
           if (msgContent == "!listacompleta") {
                if (pugStatus.participants.length != 0) {
-                    let listString = await Promise.all(pugStatus.participants.map(async (participantPug) => {
+                    let listString = await Promise.all(pugStatus.participants.map(async (participantPug,index) => {
                          let userObject = await userActions.getUser(participantPug)
-                         return `**Discord**: ${userObject.nickName} - **BattleTag**: ${userObject.battleTag} - **Rol**: ${userObject.rolInGame}`;
-
+                         return `**${index + 1}** - **Discord**: ${userObject.nickName} - **BattleTag**: ${userObject.battleTag} - **Rol**: ${userObject.rolInGame}`;
                     }));
                     msg.channel.send(listString.join("\n"))
                } else {
@@ -116,7 +115,7 @@ client.on('message', async (msg) => {
           }
 
           if (msgContent == "!lista") {
-               msg.reply(`hay ${pugStatus.participants.length}/12 jugadores apuntados\nPara ver la lista completa: <**!listaCompleta**>`)
+               msg.reply(`hay ${pugStatus.participants.length}/24 jugadores apuntados para 2 pugs\nPara ver la lista completa: <**!listaCompleta**>`)
           }
 
           if (msgContent == "!limpiar") {
