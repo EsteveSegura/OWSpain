@@ -104,7 +104,7 @@ client.on('message', async (msg) => {
 
           if (msgContent == "!listacompleta") {
                if (pugStatus.participants.length != 0) {
-                    let listString = await Promise.all(pugStatus.participants.map(async (participantPug,index) => {
+                    let listString = await Promise.all(pugStatus.participants.map(async (participantPug, index) => {
                          let userObject = await userActions.getUser(participantPug)
                          return `**${index + 1}** - **Discord**: ${userObject.nickName} - **BattleTag**: ${userObject.battleTag} - **Rol**: ${userObject.rolInGame}`;
                     }));
@@ -164,17 +164,21 @@ client.on('message', async (msg) => {
      //USER
      if (msgContent == "!yo") {
           let selfUerData = await userActions.getUser(msg.author.id)
-          const dataCard = new Discord.RichEmbed()
-               .setColor('#272c32')
-               .setTitle(`Información sobre usuario ${msg.author.username}`)
-               .setThumbnail(msg.author.avatarURL)
-               .addField('Nick', `${selfUerData.nickName}` || "__No hay datos__", true)
-               .addField('Rol', `${selfUerData.rolInGame}` || "__No hay datos__", true)
-               .addField('BattleTag', `${selfUerData.battleTag}` || "__No hay datos__", true)
-               .setTimestamp()
-               .setFooter('Información obtenida', 'https://i.imgur.com/wUaAvkK.png');
-
-          msg.channel.send(dataCard);
+          if(selfUerData){
+               const dataCard = new Discord.RichEmbed()
+                    .setColor('#272c32')
+                    .setTitle(`Información sobre usuario ${msg.author.username}`)
+                    .setThumbnail(msg.author.avatarURL)
+                    .addField('Nick', `${selfUerData.nickName}` || "__No hay datos__", true)
+                    .addField('Rol', `${selfUerData.rolInGame}` || "__No hay datos__", true)
+                    .addField('BattleTag', `${selfUerData.battleTag}` || "__No hay datos__", true)
+                    .setTimestamp()
+                    .setFooter('Información obtenida', 'https://i.imgur.com/wUaAvkK.png');
+     
+               msg.channel.send(dataCard);
+          }else{
+               msg.reply(`Parece que no estas registrado. Usa **!registrarme**`)
+          }
      }
 
      if (msgContent.startsWith("!info")) {
