@@ -292,9 +292,9 @@ client.on('guildMemberAdd', async (guildMember) => {
           if (getDates != 0) {
                let dbLastDate = moment.tz(getDates[0].dateExpiration, "Europe/Berlin").format("l LT")
                if (dbLastDate == justNow) {
-                    let userToUnMute = await utils.getMemberFromId(client.guilds.get("622466577220108313"), getDates[0].idDiscord)
+                    let userToUnMute = await utils.getMemberFromId(client.guilds.get("639925043383762966"), getDates[0].idDiscord)
                     let removeMuteData = await moderationActions.removeMute(getDates[0].idDiscord)
-                    let mutedRolId = await collections.getRolIdByName(client.guilds.get("622466577220108313"), collections.mutedRol)
+                    let mutedRolId = await collections.getRolIdByName(client.guilds.get("639925043383762966"), collections.mutedRol)
                     await userToUnMute.removeRole(mutedRolId.id)
                }
           }
