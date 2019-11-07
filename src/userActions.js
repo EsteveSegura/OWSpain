@@ -47,7 +47,7 @@ async function havePermisionsPugMaster(guild,member){
      return new Promise(async (resolve,reject) => {
           pugMasterRol = collections.getRolIdByName(guild,collections.pugMasterRol).id
           member._roles.forEach((roles) => {
-               if(roles == pugMasterRol){
+               if(roles == pugMasterRol.id){
                     resolve(true)
                }  
           });
