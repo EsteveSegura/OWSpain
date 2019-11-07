@@ -233,7 +233,7 @@ client.on('message', async (msg) => {
      //TEMPORAL
 
      //ADMIN
-     /*
+     
      if(msgContent.startsWith("!mute")){
           if(msg.member.hasPermission('KICK_MEMBERS', false, false)){
                if(typeof msgParam != "undefined" && typeof msgParam2 != "undefined" && /^([0-9])+(h|d|m)$/g.test(msgParam2)){
@@ -253,6 +253,7 @@ client.on('message', async (msg) => {
                msg.reply('¿Eres administrador o moderador?')
           }
      }
+     
      //COMPROBAR CADA MIN! PARA SABER SI HAY QUE QUITAR O NO
      if(msgContent.startsWith("!unmute")){
           if(msg.member.hasPermission('KICK_MEMBERS', false, false)){
@@ -273,7 +274,7 @@ client.on('message', async (msg) => {
                msg.reply('¿Eres administrador o moderador?')
           }
      }
-     */
+     
      //ADMIN
 
      if (msgContent == "!help" || msgContent == "!ayuda") {
