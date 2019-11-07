@@ -1,6 +1,18 @@
 //Models 
 const Moderation = require('./models/moderation');
 
+async function getMutesByTime(){
+     return new Promise(async (resolve, reject) => {
+          Moderation.find({}).sort({dateExpiration:1}).exec((err, moderations) =>{
+               if(moderations){
+                    resolve(moderations);
+               }else{
+                    resolve(false);
+               }
+          });
+     });
+} 
+
 async function mute(idDiscord,type,dateExpiration,oldRoles){
      return new Promise(async (resolve,reject) => {
           Moderation.findOne({idDiscord:idDiscord }, async(err,moderation) =>{
@@ -43,4 +55,4 @@ async function removeMute(idDiscord){
 }
 
 
-module.exports = { mute, removeMute }
+module.exports = { mute, removeMute, getMutesByTime }

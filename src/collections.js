@@ -55,6 +55,7 @@ async function getChannelByName(guild,name){
 }
 
 async function getRolIdByName(guild,name){
+     console.log(name)
      let rol = await guild.roles.find('name',name)
      return rol
 }

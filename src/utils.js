@@ -1,3 +1,5 @@
+const moment = require('moment-timezone');
+
 async function getMemberFromId(guild, idDiscord) {
      return new Promise(async (resolve, reject) => {
           resolve(await guild.members.find("id", idDiscord))

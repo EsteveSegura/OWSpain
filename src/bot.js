@@ -1,4 +1,5 @@
 require('dotenv').config()
+const moment = require('moment-timezone');
 const Discord = require('discord.js');
 const mongoose = require('mongoose');
 const client = new Discord.Client();
@@ -131,7 +132,6 @@ client.on('message', async (msg) => {
           if (msgContent.startsWith("!sacar")) {
                let userData = await userActions.getUser(msg.mentions.users.first().id)
                let isPugMaster = await userActions.havePermisionsPugMaster(msg.guild, msg.member)
-               console.log(userData)
                if (typeof msgParam != "undefined") {
                     if (userData && isPugMaster) {
                          let userIsInPug = pugActions.userIsInPug(userData.idDiscord)
@@ -180,7 +180,6 @@ client.on('message', async (msg) => {
 
      if (msgContent.startsWith("!info")) {
           let userData = await userActions.getUser(msg.mentions.users.first().id)
-          console.log(userData)
           if (typeof msgParam != "undefined") {
                if (userData) {
                     const dataCard = new Discord.RichEmbed()
@@ -207,7 +206,6 @@ client.on('message', async (msg) => {
      if (msg.channel.id == warChannel.id) {
           if (msgContent == "!createwar") {
                let createWar = await warActions.createWar()
-               console.log(createWar)
                if (createWar == "war_created") {
                     msg.reply("OK.")
                }
@@ -232,50 +230,48 @@ client.on('message', async (msg) => {
      }
      //TEMPORAL
 
-     //ADMIN
-     
-     if(msgContent.startsWith("!mute")){
-          if(msg.member.hasPermission('KICK_MEMBERS', false, false)){
-               if(typeof msgParam != "undefined" && typeof msgParam2 != "undefined" && /^([0-9])+(h|d|m)$/g.test(msgParam2)){
-                    let userToMute = await utils.getMemberFromId(msg.guild,msg.mentions.users.first().id)
-                    let modAction = await moderationActions.mute(userToMute.id,'Mute',utils.addTimeToDate(Date.now(),msgParam2),userToMute._roles)
-                    if(modAction == "muted"){
-                         mutedRolId = collections.getRolIdByName(msg.guild,collections.mutedRol).id
-                         userToMute.addRole(mutedRolId)
+     //ADMIN START
+     if (msgContent.startsWith("!mute")) {
+          if (msg.member.hasPermission('KICK_MEMBERS', false, false)) {
+               if (typeof msgParam != "undefined" && typeof msgParam2 != "undefined" && /^([0-9])+(h|d|m)$/g.test(msgParam2)) {
+                    let userToMute = await utils.getMemberFromId(msg.guild, msg.mentions.users.first().id)
+                    let modAction = await moderationActions.mute(userToMute.id, 'Mute', utils.addTimeToDate(Date.now(), msgParam2).toISOString(), userToMute._roles)
+                    if (modAction == "muted") {
+                         mutedRolId = await collections.getRolIdByName(msg.guild, collections.mutedRol)
+                         userToMute.addRole(mutedRolId.id)
                          msg.reply(`Has muteado a ${userToMute.user.username}`)
-                    }else{
+                    } else {
                          msg.reply(`¿El usuario ya tiene un muteo?`)
                     }
-               }else{
+               } else {
                     msg.reply(`revisa el comando, no esta bien`)
                }
-          }else{
+          } else {
                msg.reply('¿Eres administrador o moderador?')
           }
      }
-     
-     //COMPROBAR CADA MIN! PARA SABER SI HAY QUE QUITAR O NO
-     if(msgContent.startsWith("!unmute")){
-          if(msg.member.hasPermission('KICK_MEMBERS', false, false)){
-               if(typeof msgParam != "undefined"){
-                    let userToUnMute = await utils.getMemberFromId(msg.guild,msg.mentions.users.first().id)
+
+     if (msgContent.startsWith("!unmute")) {
+          if (msg.member.hasPermission('KICK_MEMBERS', false, false)) {
+               if (typeof msgParam != "undefined") {
+                    let userToUnMute = await utils.getMemberFromId(msg.guild, msg.mentions.users.first().id)
                     let unMute = await moderationActions.removeMute(userToUnMute.id)
-                    if(unMute.message == "deleted"){
-                         mutedRolId = collections.getRolIdByName(msg.guild,collections.mutedRol).id
-                         await userToUnMute.removeRole(mutedRolId)                    
+                    if (unMute.message == "deleted") {
+                         mutedRolId = await collections.getRolIdByName(msg.guild, collections.mutedRol)
+                         await userToUnMute.removeRole(mutedRolId.id)
                          msg.reply(`Se ha quitado el mute sobre ${userToUnMute.user.username}`)
-                    }else{
+                    } else {
                          msg.reply(`No se ha podido quitar el mute sobre ${userToUnMute.user.username}`)
                     }
-               }else{
+               } else {
                     msg.reply(`revisa el comando, no esta bien`)
                }
-          }else{
+          } else {
                msg.reply('¿Eres administrador o moderador?')
           }
      }
-     
-     //ADMIN
+
+     //ADMIN END
 
      if (msgContent == "!help" || msgContent == "!ayuda") {
           msg.channel.send("**Lista de comandos: Usuario **\n```!registrarme: Guarda tu cuenta en el sistema. Necesario para jugar pugs\n!battletag <tag>: Guarda o actualiza tu battletag. Necesario para jugar pugs. Ej: !battletag GiR#2323\n!tank !dps !heal !flex: Asignate tu rol favorito. Ej: !tank\n!yo: Muestra tu información\n!info <usuario>: Muestra la información de un usuario. Ej: !info @GiR\n``` **Lista de comandos: Pugs** ```!entrar: Te unes al pug en curso\n!salir: Sales del pug, solo si estas dentro\n!lista: Muestra el numero de participantes\n!listaCompleta: Muestra la información de los participantes\n!limpiar: Elimina todos los participantes del pug\n!sacar <usuario>: Eliminas a un usuario del pug. Ej: !sacar @GiR```")
@@ -284,9 +280,25 @@ client.on('message', async (msg) => {
 });
 
 client.on('guildMemberAdd', async (guildMember) => {
-     //Registrar usuario
      let registerUser = await userActions.registerUser(guildMember)
-     console.log(registerUser)
-})
+});
+
+
+//CHECKING MINUTE BY MINUTE
+(async () => {
+     setInterval(async () => {
+          let getDates = await moderationActions.getMutesByTime()
+          let justNow = moment().format("l LT")
+          if (getDates != 0) {
+               let dbLastDate = moment.tz(getDates[0].dateExpiration, "Europe/Berlin").format("l LT")
+               if (dbLastDate == justNow) {
+                    let userToUnMute = await utils.getMemberFromId(client.guilds.get("622466577220108313"), getDates[0].idDiscord)
+                    let removeMuteData = await moderationActions.removeMute(getDates[0].idDiscord)
+                    let mutedRolId = await collections.getRolIdByName(client.guilds.get("622466577220108313"), collections.mutedRol)
+                    await userToUnMute.removeRole(mutedRolId.id)
+               }
+          }
+     }, 60000);
+})();
 
 client.login(process.env.TOKEN);
