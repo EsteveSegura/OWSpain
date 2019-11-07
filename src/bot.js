@@ -4,12 +4,12 @@ const mongoose = require('mongoose');
 const client = new Discord.Client();
 
 //Imports
-const utils = require('./utils');
 const moderationActions = require('./moderationActions');
 const collections = require('./collections');
 const userActions = require('./userActions');
 const pugActions = require('./pugActions');
 const warActions = require('./warActions');
+const utils = require('./utils');
 
 //DataBase
 mongoose.connect('mongodb://localhost/owspain', { useNewUrlParser: true, useUnifiedTopology: true })
@@ -56,7 +56,7 @@ client.on('message', async (msg) => {
      }
 
      //ROL ZONE
-     let requestChannel = await collections.getChannelByName(msg.guild,collections.channelIdRequest)
+     let requestChannel = await collections.getChannelByName(msg.guild, collections.channelIdRequest)
      if (msg.channel.id == requestChannel.id) {
           collections.roles.forEach(async (roles) => {
                if (roles.canSelfAdd && msgContent === roles.command) {
@@ -75,7 +75,7 @@ client.on('message', async (msg) => {
      }
 
      //PUG ZONE
-     let pugChannel = await collections.getChannelByName(msg.guild,collections.channelIdPugs)
+     let pugChannel = await collections.getChannelByName(msg.guild, collections.channelIdPugs)
      if (msg.channel.id == pugChannel.id) {
           let pugStatus = await pugActions.getPug()
 
@@ -119,7 +119,7 @@ client.on('message', async (msg) => {
           }
 
           if (msgContent == "!limpiar") {
-               let isPugMaster = await userActions.havePermisionsPugMaster(msg.guild,msg.member)
+               let isPugMaster = await userActions.havePermisionsPugMaster(msg.guild, msg.member)
                if (isPugMaster) {
                     pugActions.cleanPug()
                     msg.reply(`El pug se ha limpiado de forma correcta.`)
@@ -130,21 +130,21 @@ client.on('message', async (msg) => {
 
           if (msgContent.startsWith("!sacar")) {
                let userData = await userActions.getUser(msg.mentions.users.first().id)
-               let isPugMaster = await userActions.havePermisionsPugMaster(msg.guild,msg.member)
+               let isPugMaster = await userActions.havePermisionsPugMaster(msg.guild, msg.member)
                console.log(userData)
-               if(typeof msgParam != "undefined" ){
-                    if(userData && isPugMaster){
+               if (typeof msgParam != "undefined") {
+                    if (userData && isPugMaster) {
                          let userIsInPug = pugActions.userIsInPug(userData.idDiscord)
-                         if(userIsInPug){
+                         if (userIsInPug) {
                               pugActions.removeUserInPug(userData.idDiscord)
                               msg.reply(`Se ha eliminado a <@${userData.idDiscord}>`) //Mejorar esto
-                         }else{
+                         } else {
                               msg.reply(`Ese usuario no esta en el pug`)
                          }
-                    }else{
+                    } else {
                          msg.reply(`No se puede realizar esa acción`)
                     }
-               }else{
+               } else {
                     msg.reply(`Tienes que etiquetar a alguien`)
                }
           }
@@ -178,11 +178,11 @@ client.on('message', async (msg) => {
           msg.channel.send(dataCard);
      }
 
-     if(msgContent.startsWith("!info")){
+     if (msgContent.startsWith("!info")) {
           let userData = await userActions.getUser(msg.mentions.users.first().id)
           console.log(userData)
-          if(typeof msgParam != "undefined" ){
-               if(userData){
+          if (typeof msgParam != "undefined") {
+               if (userData) {
                     const dataCard = new Discord.RichEmbed()
                          .setColor('#272c32')
                          .setTitle(`Información sobre usuario ${userData.nickName}`)
@@ -192,36 +192,36 @@ client.on('message', async (msg) => {
                          .addField('BattleTag', `${userData.battleTag}` || "__No hay datos__", true)
                          .setTimestamp()
                          .setFooter('Información obtenida', 'https://i.imgur.com/wUaAvkK.png');
-          
+
                     msg.channel.send(dataCard);
-               }else{
+               } else {
                     msg.reply(`Parece que no se ha encontrado info de **${msg.mentions.users.first().username}**`)
                }
-          }else{
+          } else {
                msg.reply(`Tienes que etiquetar a alguien`)
           }
      }
 
      //TEMPORAL
-     let warChannel = await collections.getChannelByName(msg.guild,collections.channelIdWar)
+     let warChannel = await collections.getChannelByName(msg.guild, collections.channelIdWar)
      if (msg.channel.id == warChannel.id) {
-          if(msgContent == "!createwar"){
+          if (msgContent == "!createwar") {
                let createWar = await warActions.createWar()
                console.log(createWar)
-               if(createWar == "war_created"){
+               if (createWar == "war_created") {
                     msg.reply("OK.")
                }
           }
 
-          if(msgContent.startsWith("!war")){
+          if (msgContent.startsWith("!war")) {
                createWar = await warActions.addToList(msgParam)
-               if(typeof msgParam != "undefined"){
-                    if(createWar == "user_added"){
+               if (typeof msgParam != "undefined") {
+                    if (createWar == "user_added") {
                          msg.reply(`Se ha añadido ${msgParam} a la lista`)
-                    }else{
+                    } else {
                          msg.reply(`Ha ocurrido algo inesperado, habla con GiR`);
                     }
-               }else{
+               } else {
                     msg.reply(`El comando no se ha ejecutado de forma correcta.`)
                }
           }
@@ -276,7 +276,7 @@ client.on('message', async (msg) => {
      */
      //ADMIN
 
-     if(msgContent == "!help" || msgContent == "!ayuda"){
+     if (msgContent == "!help" || msgContent == "!ayuda") {
           msg.channel.send("**Lista de comandos: Usuario **\n```!registrarme: Guarda tu cuenta en el sistema. Necesario para jugar pugs\n!battletag <tag>: Guarda o actualiza tu battletag. Necesario para jugar pugs. Ej: !battletag GiR#2323\n!tank !dps !heal !flex: Asignate tu rol favorito. Ej: !tank\n!yo: Muestra tu información\n!info <usuario>: Muestra la información de un usuario. Ej: !info @GiR\n``` **Lista de comandos: Pugs** ```!entrar: Te unes al pug en curso\n!salir: Sales del pug, solo si estas dentro\n!lista: Muestra el numero de participantes\n!listaCompleta: Muestra la información de los participantes\n!limpiar: Elimina todos los participantes del pug\n!sacar <usuario>: Eliminas a un usuario del pug. Ej: !sacar @GiR```")
      }
 
