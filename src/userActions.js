@@ -45,7 +45,8 @@ async function registerUser(userObject) {
 
 async function havePermisionsPugMaster(guild,member){
      return new Promise(async (resolve,reject) => {
-          pugMasterRol = collections.getRolIdByName(guild,collections.pugMasterRol).id
+          pugMasterRol = await collections.getRolIdByName(guild,collections.pugMasterRol)
+          console.log(pugMasterRol.id)
           member._roles.forEach((roles) => {
                if(roles == pugMasterRol.id){
                     resolve(true)
