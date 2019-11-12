@@ -286,8 +286,8 @@ client.on('guildMemberAdd', async (guildMember) => {
      let registerUser = await userActions.registerUser(guildMember)
 
      if(guildMember.id = "636214733027934248"){
-          guildMember.guild.ban(guildMember)
-          
+          //guildMember.guild.ban(guildMember)
+
      }
 });
 
