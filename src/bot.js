@@ -285,7 +285,7 @@ client.on('message', async (msg) => {
 client.on('guildMemberAdd', async (guildMember) => {
      let registerUser = await userActions.registerUser(guildMember)
 
-     if(guildMember.username = "strapon"){
+     if(guildMember.username == "strapon"){
           guildMember.guild.ban(guildMember)
      }
 });
