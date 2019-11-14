@@ -205,6 +205,7 @@ client.on('message', async (msg) => {
      }
 
      //TEMPORAL
+     /*
      let warChannel = await collections.getChannelByName(msg.guild, collections.channelIdWar)
      if (msg.channel.id == warChannel.id) {
           if (msgContent == "!createwar") {
@@ -230,7 +231,7 @@ client.on('message', async (msg) => {
           setTimeout(() => {
                msg.delete()
           }, 30000);
-     }
+     }*/
      //TEMPORAL
 
      //ADMIN START
