@@ -2,7 +2,16 @@ require('dotenv').config()
 const moment = require('moment-timezone');
 const axios = require('axios');
 
+async function sleep(s){
+     return new Promise((resolve,reject) => {
+          setTimeout(() => {
+               resolve(true)
+          },1000 * s)
+     })
+}
+
 async function getStream(user) {
+     await sleep(6)
      let urlRequest = "https://api.twitch.tv/helix/streams?user_login=" + user;
      console.log('USUARIO :' + user)
      console.log(urlRequest)
@@ -54,4 +63,4 @@ function addTimeToDate(date, timeToAdd) {
 }
 
 
-module.exports = { getMemberFromId, addTimeToDate, getStream }
+module.exports = { getMemberFromId, addTimeToDate, getStream, sleep }
