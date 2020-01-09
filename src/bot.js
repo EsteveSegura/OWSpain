@@ -346,7 +346,7 @@ client.on('guildMemberAdd', async (guildMember) => {
                console.log(`Buscando el streamer ${allStreamers[i]}`)
                let callApiTwitch = await utils.getStream(allStreamers[i].user);
                checkIfOnline.push(callApiTwitch);
-               utils.sleep(12);
+               await utils.sleep(12);
           }
 
           console.log(checkIfOnline)

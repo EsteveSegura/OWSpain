@@ -11,7 +11,7 @@ async function sleep(s){
 }
 
 async function getStream(user) {
-     await sleep(6)
+     
      let urlRequest = "https://api.twitch.tv/helix/streams?user_login=" + user;
      console.log('USUARIO :' + user)
      console.log(urlRequest)
@@ -20,7 +20,7 @@ async function getStream(user) {
           headers: { 'Client-ID': process.env.CLIENT_ID_TWITCH },
           url: urlRequest
      })
-
+     console.log(request)
      if (request.data.data.length !== 0) {
           return {
                user: user,
