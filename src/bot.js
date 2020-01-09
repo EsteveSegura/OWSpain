@@ -331,15 +331,23 @@ client.on('guildMemberAdd', async (guildMember) => {
      //Comprobando cada
      setTimeout(async () => {
           let guildOw = await client.guilds.find('id', collections.guildId)
-          console.log(guildOw)
           let streamsChannel = guildOw.channels.find('name', 'streams')
 
           let allStreamers = await streamerActions.getStreamers();
-          let checkIfOnline = await Promise.all(allStreamers.map(async (streamer) => {
+          /*let checkIfOnline = await Promise.all(allStreamers.map(async (streamer) => {
                console.log(`Buscando el streamer ${streamer}`)
                let callApiTwitch = await utils.getStream(streamer.user);
                return callApiTwitch
-          }))
+          }))*/
+
+          let checkIfOnline = []
+
+          for(let i = 0 ; i < allStreamers.length; i++){
+               console.log(`Buscando el streamer ${allStreamers[i]}`)
+               let callApiTwitch = await utils.getStream(allStreamers[i].user);
+               checkIfOnline.push(callApiTwitch);
+               utils.sleep(12);
+          }
 
           console.log(checkIfOnline)
           for (let i = 0; i < checkIfOnline.length; i++) {
