@@ -329,8 +329,9 @@ client.on('guildMemberAdd', async (guildMember) => {
 
 
      //Comprobando cada
-     setInterval(async () => {
-          let guildOw = await collections.getGuildById(client, collections.guildId)
+     setTimeout(async () => {
+          let guildOw = await client.guilds.find('id', collections.guildId)
+          console.log(guildOw)
           let streamsChannel = guildOw.channels.find('name', 'streams')
 
           let allStreamers = await streamerActions.getStreamers();
@@ -352,7 +353,7 @@ client.on('guildMemberAdd', async (guildMember) => {
                }
           }
 
-     }, 60000 * 3 );
+     },  60000 * 3 );
 })();
 
 
