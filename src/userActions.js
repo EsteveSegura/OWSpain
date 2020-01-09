@@ -8,7 +8,7 @@ async function getUser(idDiscord) {
      return new Promise((resolve, reject) => {
           User.findOne({ 'idDiscord': idDiscord }, (err, userDiscord) => {
                if (err) {
-                    reject(false);
+                     reject(false);
                }
                if(userDiscord){
                     resolve(userDiscord);

@@ -1,6 +1,9 @@
+const guildId = '622466577220108313'
+
 const channelIdRequest = "auto-rol";
 const channelIdPugs = "pugs";
 const channelIdWar = "ow-spain-war";
+const channelIdStreams = "streams"
 
 const mutedRol = "muted";
 const pugMasterRol = "PugMaster";
@@ -49,6 +52,10 @@ const roles = [
      },
 ]
 
+async function getGuildById(client,id){
+     return await client.guilds.find('id', id)
+}
+
 async function getChannelByName(guild,name){
      let channel = await guild.channels.find('name',name)
      return channel
@@ -68,5 +75,5 @@ function getRolByName(name){
      })[0];
 }
 
-module.exports = { roles, getRolByName, getRolIdByName, getChannelByName, channelIdRequest, channelIdPugs, channelIdWar, pugMasterRol, mutedRol }
+module.exports = { roles, getRolByName, getRolIdByName, getChannelByName, channelIdRequest, channelIdPugs, channelIdWar, pugMasterRol, mutedRol, channelIdStreams, getGuildById, guildId }
 

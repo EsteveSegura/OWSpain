@@ -2,15 +2,6 @@
 const Pug = require('./models/pug');
 
 
-//TEMPORAL
-/*
-const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/owspain', { useNewUrlParser: true, useUnifiedTopology: true })
-     .then((db) => console.log('Conectado con exito a la base de datos'))
-     .catch((err) => console.log('Fallo al conectar la base de datos'))    
-*/
-//TEMPORAL
-
 async function createPug(){
      return new Promise(async (resolve,reject) => {
           let newPug = new Pug({

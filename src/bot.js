@@ -6,11 +6,13 @@ const client = new Discord.Client();
 
 //Imports
 const moderationActions = require('./moderationActions');
+const streamerActions = require('./streamerActions');
 const collections = require('./collections');
 const userActions = require('./userActions');
 const pugActions = require('./pugActions');
 const warActions = require('./warActions');
 const utils = require('./utils');
+
 
 //DataBase
 mongoose.connect('mongodb://localhost/owspain', { useNewUrlParser: true, useUnifiedTopology: true })
@@ -19,6 +21,7 @@ mongoose.connect('mongodb://localhost/owspain', { useNewUrlParser: true, useUnif
 
 
 client.on('ready', () => {
+
      console.log(`Logged in as ${client.user.tag}!`);
      client.user.setActivity('!ayuda')
 });
@@ -164,7 +167,7 @@ client.on('message', async (msg) => {
      //USER
      if (msgContent == "!yo") {
           let selfUerData = await userActions.getUser(msg.author.id)
-          if(selfUerData){
+          if (selfUerData) {
                const dataCard = new Discord.RichEmbed()
                     .setColor('#272c32')
                     .setTitle(`Información sobre usuario ${msg.author.username}`)
@@ -174,9 +177,9 @@ client.on('message', async (msg) => {
                     .addField('BattleTag', `${selfUerData.battleTag}` || "__No hay datos__", true)
                     .setTimestamp()
                     .setFooter('Información obtenida', 'https://i.imgur.com/wUaAvkK.png');
-     
+
                msg.channel.send(dataCard);
-          }else{
+          } else {
                msg.reply(`Parece que no estas registrado. Usa **!registrarme**`)
           }
      }
@@ -203,6 +206,22 @@ client.on('message', async (msg) => {
                msg.reply(`Tienes que etiquetar a alguien`)
           }
      }
+
+     //TWITCH
+
+     if (msgContent.startsWith("!addstreamer")) {
+          if(msg.member.hasPermission('KICK_MEMBERS', false, false)){
+               if (typeof msgParam != "undefined") {
+                    streamerActions.addStreamer(msgParam)
+                    msg.reply(`OK el usuario es ${msgParam}`)
+               } else {
+                    msg.reply(`Tienes que especificar un usuario de twitch`)
+               }
+          }else{
+               msg.reply('¿Eres administrador o moderador?')
+          }
+     }
+
 
      //TEMPORAL
      /*
@@ -286,7 +305,7 @@ client.on('message', async (msg) => {
 client.on('guildMemberAdd', async (guildMember) => {
      let registerUser = await userActions.registerUser(guildMember)
 
-     if(guildMember.username == "strapon"){
+     if (guildMember.username == "strapon") {
           guildMember.guild.ban(guildMember)
      }
 });
@@ -307,6 +326,33 @@ client.on('guildMemberAdd', async (guildMember) => {
                }
           }
      }, 60000);
+
+
+     //Comprobando cada
+     setInterval(async () => {
+          let guildOw = await collections.getGuildById(client, collections.guildId)
+          let streamsChannel = guildOw.channels.find('name', 'streams')
+
+          let allStreamers = await streamerActions.getStreamers();
+          let checkIfOnline = await Promise.all(allStreamers.map(async (streamer) => {
+               let callApiTwitch = await utils.getStream(streamer.user);
+               return callApiTwitch
+          }))
+
+          console.log(checkIfOnline)
+          for (let i = 0; i < checkIfOnline.length; i++) {
+               let checkDb = await streamerActions.getStreamer(checkIfOnline[i].user)
+               if (!checkIfOnline[i].userInfo) {
+                    streamerActions.setStatus(checkIfOnline[i].user, false,false)
+               } else {
+                    if (checkDb.lastStatus == false && checkIfOnline[i].userInfo) {
+                         streamerActions.setStatus(checkIfOnline[i].user, true, true)
+                         streamsChannel.send(`Hey, ${checkIfOnline[i].user} esta en directo en este momento en http://twitch.tv/${checkIfOnline[i].user} !`)
+                    }
+               }
+          }
+
+     }, 60000 * 3 );
 })();
 
 client.login(process.env.TOKEN);
