@@ -2,25 +2,27 @@ require('dotenv').config()
 const moment = require('moment-timezone');
 const axios = require('axios');
 
-async function getStream(user){
+async function getStream(user) {
+     let urlRequest = "https://api.twitch.tv/helix/streams?user_login=" + user;
      console.log('USUARIO :' + user)
-    let request = await axios({
-        method : "GET",
-        headers : {'Client-ID' : process.env.CLIENT_ID_TWITCH},
-        url : `https://api.twitch.tv/helix/streams?user_login=${user}`
-    })
+     console.log(urlRequest)
+     let request = await axios({
+          method: "GET",
+          headers: { 'Client-ID': process.env.CLIENT_ID_TWITCH },
+          url: urlRequest
+     })
 
-    if(request.data.data.length !== 0){
-        return {
-             user: user,
-             userInfo : request.data.data
-        }
-    }else{
-        return {
-             user: user,
-             userInfo: false
-        }
-    }
+     if (request.data.data.length !== 0) {
+          return {
+               user: user,
+               userInfo: request.data.data
+          }
+     } else {
+          return {
+               user: user,
+               userInfo: false
+          }
+     }
 }
 
 async function getMemberFromId(guild, idDiscord) {
