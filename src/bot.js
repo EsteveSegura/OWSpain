@@ -213,7 +213,7 @@ client.on('message', async (msg) => {
           if(msg.member.hasPermission('KICK_MEMBERS', false, false)){
                if (typeof msgParam != "undefined") {
                     streamerActions.addStreamer(msgParam)
-                    msg.reply(`OK el usuario es ${msgParam}`)
+                    msg.reply(`El streamer ${msgParam}, se añadio correctamente.`)
                } else {
                     msg.reply(`Tienes que especificar un usuario de twitch`)
                }
@@ -354,5 +354,6 @@ client.on('guildMemberAdd', async (guildMember) => {
 
      }, 60000 * 3 );
 })();
+
 
 client.login(process.env.TOKEN);

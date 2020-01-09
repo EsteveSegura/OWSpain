@@ -1,4 +1,4 @@
-const guildId = '622466577220108313'
+const guildId = '639925043383762966'
 
 const channelIdRequest = "auto-rol";
 const channelIdPugs = "pugs";
