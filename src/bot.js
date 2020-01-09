@@ -329,7 +329,7 @@ client.on('guildMemberAdd', async (guildMember) => {
 
 
      //Comprobando cada
-     setTimeout(async () => {
+     setInterval(async () => {
           let guildOw = await client.guilds.find('id', collections.guildId)
           let streamsChannel = guildOw.channels.find('name', 'streams')
 
@@ -349,7 +349,6 @@ client.on('guildMemberAdd', async (guildMember) => {
                await utils.sleep(12);
           }
 
-          console.log(checkIfOnline)
           for (let i = 0; i < checkIfOnline.length; i++) {
                let checkDb = await streamerActions.getStreamer(checkIfOnline[i].user)
                if (!checkIfOnline[i].userInfo) {
@@ -362,7 +361,7 @@ client.on('guildMemberAdd', async (guildMember) => {
                }
           }
 
-     },  7000 /*60000 * 3*/ );
+     },  60000 * 3 );
 })();
 
 
