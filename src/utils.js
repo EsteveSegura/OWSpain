@@ -3,6 +3,7 @@ const moment = require('moment-timezone');
 const axios = require('axios');
 
 async function getStream(user){
+     console.log('USUARIO :' + user)
     let request = await axios({
         method : "GET",
         headers : {'Client-ID' : process.env.CLIENT_ID_TWITCH},

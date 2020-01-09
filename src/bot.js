@@ -336,6 +336,7 @@ client.on('guildMemberAdd', async (guildMember) => {
 
           let allStreamers = await streamerActions.getStreamers();
           let checkIfOnline = await Promise.all(allStreamers.map(async (streamer) => {
+               console.log(`Buscando el streamer ${streamer}`)
                let callApiTwitch = await utils.getStream(streamer.user);
                return callApiTwitch
           }))
@@ -353,7 +354,7 @@ client.on('guildMemberAdd', async (guildMember) => {
                }
           }
 
-     },  60000 * 3 );
+     },  7000 /*60000 * 3*/ );
 })();
 
 
