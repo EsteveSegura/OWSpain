@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/EsteveSegura/OWSpain#readme",
   "dependencies": {
-    "axios": "^0.19.1",
+    "axios": "^0.21.1",
     "discord.js": "^11.5.1",
     "dotenv": "^8.2.0",
     "moment": "^2.24.0",
